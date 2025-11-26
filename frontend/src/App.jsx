@@ -6,16 +6,26 @@ import {
   Link,
 } from "react-router-dom";
 
-import Login from "./pages/Login";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Tasks from "./pages/Tasks";
-import Dashboard from "./pages/Dashboard";
 import TaskBoard from "./pages/TaskBoard";
 
-// simple protected route wrapper
+// simple calendar placeholder (so Calendar link works)
+function Calendar() {
+  return (
+    <div style={{ padding: "30px" }}>
+      <h1>Calendar</h1>
+      <p>Calendar view coming soon.</p>
+    </div>
+  );
+}
+
+// protect routes
 function ProtectedRoute({ children }) {
   const isAuthed = !!localStorage.getItem("prowork_auth");
-  return isAuthed ? children : <Navigate to="/login" replace />;
+  return isAuthed ? children : <Navigate to="/auth" replace />;
 }
 
 function Navbar() {
@@ -23,7 +33,7 @@ function Navbar() {
 
   const logout = () => {
     localStorage.removeItem("prowork_auth");
-    window.location.href = "/login";
+    window.location.href = "/auth";
   };
 
   if (!isAuthed) return null;
@@ -43,6 +53,9 @@ function Navbar() {
         </Link>
         <Link style={link} to="/task-board">
           Task Board
+        </Link>
+        <Link style={link} to="/calendar">
+          Calendar
         </Link>
         <button onClick={logout} style={logoutBtn}>
           Logout
@@ -80,10 +93,10 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        {/* public */}
-        <Route path="/login" element={<Login />} />
+        {/* public auth page */}
+        <Route path="/auth" element={<Auth />} />
 
-        {/* protected routes */}
+        {/* protected pages */}
         <Route
           path="/dashboard"
           element={
@@ -116,16 +129,17 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* default: go to dashboard if logged in, else login */}
         <Route
-          path="*"
+          path="/calendar"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Calendar />
             </ProtectedRoute>
           }
         />
+
+        {/* default: go to auth */}
+        <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     </Router>
   );
