@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// FRONTEND API BASE ACCESS
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://prowork-hub.onrender.com/api";
+// 🔥 ALWAYS use deployed backend
+const BASE_URL = "https://prowork-hub.onrender.com/api";
 
 // EMPLOYEES
 export const fetchEmployees = async () => {
