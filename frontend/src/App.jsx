@@ -1,12 +1,18 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Link,
+} from "react-router-dom";
+
 import Login from "./pages/Login";
 import Employees from "./pages/Employees";
 import Tasks from "./pages/Tasks";
-// adjust these imports if your file names are different
 import Dashboard from "./pages/Dashboard";
 import TaskBoard from "./pages/TaskBoard";
-import Calendar from "./pages/Calendar";
 
+// simple protected route wrapper
 function ProtectedRoute({ children }) {
   const isAuthed = !!localStorage.getItem("prowork_auth");
   return isAuthed ? children : <Navigate to="/login" replace />;
@@ -25,13 +31,22 @@ function Navbar() {
   return (
     <nav style={nav}>
       <div style={{ fontWeight: "bold", color: "white" }}>ProWork Hub</div>
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Link style={link} to="/dashboard">Dashboard</Link>
-        <Link style={link} to="/employees">Employees</Link>
-        <Link style={link} to="/tasks">Tasks</Link>
-        <Link style={link} to="/task-board">Task Board</Link>
-        <Link style={link} to="/calendar">Calendar</Link>
-        <button onClick={logout} style={logoutBtn}>Logout</button>
+      <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+        <Link style={link} to="/dashboard">
+          Dashboard
+        </Link>
+        <Link style={link} to="/employees">
+          Employees
+        </Link>
+        <Link style={link} to="/tasks">
+          Tasks
+        </Link>
+        <Link style={link} to="/task-board">
+          Task Board
+        </Link>
+        <button onClick={logout} style={logoutBtn}>
+          Logout
+        </button>
       </div>
     </nav>
   );
@@ -51,7 +66,7 @@ const link = {
 };
 
 const logoutBtn = {
-  marginLeft: "20px",
+  marginLeft: "10px",
   padding: "6px 10px",
   borderRadius: "5px",
   border: "none",
@@ -65,8 +80,10 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
+        {/* public */}
         <Route path="/login" element={<Login />} />
 
+        {/* protected routes */}
         <Route
           path="/dashboard"
           element={
@@ -99,17 +116,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* default: go to dashboard if logged in, else login */}
         <Route
-          path="/calendar"
+          path="*"
           element={
             <ProtectedRoute>
-              <Calendar />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
-
-        {/* default route */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
   );
