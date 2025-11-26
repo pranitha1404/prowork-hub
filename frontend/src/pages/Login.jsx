@@ -1,25 +1,21 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-// Demo credentials
 const VALID_EMAIL = "admin@proworkhub.com";
 const VALID_PASSWORD = "Admin@123";
 
-export default function Login() {
+export default function Login({ onSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      // store a simple flag in localStorage
-      localStorage.setItem("prowork_auth", email);
-      navigate("/dashboard");
+      setError("");
+      onSuccess(); // tell App: login success
     } else {
-      setError("Invalid credentials. Try again.");
+      setError("Invalid email or password.");
     }
   };
 
@@ -27,30 +23,42 @@ export default function Login() {
     <div style={outer}>
       <form style={card} onSubmit={handleSubmit}>
         <h2 style={{ marginBottom: "10px" }}>ProWork Hub – Login</h2>
-        <p style={{ fontSize: "12px", marginBottom: "15px" }}>
-          Demo credentials: <b>{VALID_EMAIL}</b> / <b>{VALID_PASSWORD}</b>
+
+        <p style={{ fontSize: "13px", marginBottom: "15px" }}>
+          Demo credentials:&nbsp;
+          <b>{VALID_EMAIL}</b> / <b>{VALID_PASSWORD}</b>
         </p>
 
         <input
-          type="text"
+          type="email"
           placeholder="Email"
+          style={input}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={input}
         />
+
         <input
           type="password"
           placeholder="Password"
+          style={input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={input}
         />
 
-        {error && <p style={{ color: "red", fontSize: "12px" }}>{error}</p>}
+        {error && (
+          <p style={{ color: "red", fontSize: "12px", marginBottom: "5px" }}>
+            {error}
+          </p>
+        )}
 
-        <button type="submit" style={button}>
+        <button type="submit" style={primaryBtn}>
           Login
         </button>
+
+        <p style={{ fontSize: "11px", marginTop: "10px", color: "#555" }}>
+          (For now, signup & Google login are not real – use the demo admin
+          credentials above.)
+        </p>
       </form>
     </div>
   );
@@ -75,18 +83,18 @@ const card = {
 };
 
 const input = {
-  marginBottom: "10px",
+  marginBottom: "8px",
   padding: "8px",
   borderRadius: "5px",
   border: "1px solid #ccc",
 };
 
-const button = {
-  marginTop: "5px",
+const primaryBtn = {
   padding: "8px",
   borderRadius: "5px",
   border: "none",
   background: "#001f3f",
   color: "#fff",
   cursor: "pointer",
+  marginTop: "4px",
 };

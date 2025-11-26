@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,13 +7,13 @@ import {
   Link,
 } from "react-router-dom";
 
-import Auth from "./pages/Auth";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Tasks from "./pages/Tasks";
 import TaskBoard from "./pages/TaskBoard";
 
-// simple calendar placeholder (so Calendar link works)
+// simple placeholder Calendar component
 function Calendar() {
   return (
     <div style={{ padding: "30px" }}>
@@ -22,22 +23,8 @@ function Calendar() {
   );
 }
 
-// protect routes
-function ProtectedRoute({ children }) {
-  const isAuthed = !!localStorage.getItem("prowork_auth");
-  return isAuthed ? children : <Navigate to="/auth" replace />;
-}
-
-function Navbar() {
-  const isAuthed = !!localStorage.getItem("prowork_auth");
-
-  const logout = () => {
-    localStorage.removeItem("prowork_auth");
-    window.location.href = "/auth";
-  };
-
-  if (!isAuthed) return null;
-
+// top navbar shown only AFTER login
+function Navbar({ onLogout }) {
   return (
     <nav style={nav}>
       <div style={{ fontWeight: "bold", color: "white" }}>ProWork Hub</div>
@@ -57,7 +44,7 @@ function Navbar() {
         <Link style={link} to="/calendar">
           Calendar
         </Link>
-        <button onClick={logout} style={logoutBtn}>
+        <button onClick={onLogout} style={logoutBtn}>
           Logout
         </button>
       </div>
@@ -89,58 +76,42 @@ const logoutBtn = {
 };
 
 function App() {
+  // simple in-memory auth flag
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  const handleLoginSuccess = () => {
+    setIsAuthed(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthed(false);
+  };
+
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        {/* public auth page */}
-        <Route path="/auth" element={<Auth />} />
-
-        {/* protected pages */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/employees"
-          element={
-            <ProtectedRoute>
-              <Employees />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/tasks"
-          element={
-            <ProtectedRoute>
-              <Tasks />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/task-board"
-          element={
-            <ProtectedRoute>
-              <TaskBoard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/calendar"
-          element={
-            <ProtectedRoute>
-              <Calendar />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* default: go to auth */}
-        <Route path="*" element={<Navigate to="/auth" replace />} />
-      </Routes>
+      {isAuthed ? (
+        <>
+          <Navbar onLogout={handleLogout} />
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/employees" element={<Employees />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/task-board" element={<TaskBoard />} />
+            <Route path="/calendar" element={<Calendar />} />
+            {/* default once logged in */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </>
+      ) : (
+        <Routes>
+          <Route
+            path="/login"
+            element={<Login onSuccess={handleLoginSuccess} />}
+          />
+          {/* any other URL redirects to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      )}
     </Router>
   );
 }
