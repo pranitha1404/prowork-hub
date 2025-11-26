@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// frontend/src/services/api.js
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+// FRONTEND API BASE ACCESS
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://prowork-hub.onrender.com/api";
 
 // EMPLOYEES
 export const fetchEmployees = async () => {
@@ -25,8 +24,7 @@ export const deleteEmployee = async (id) => {
   return res.data;
 };
 
-
-// TASKS  ✔ adding missing function here
+// TASKS
 export const fetchTasks = async () => {
   const res = await axios.get(`${BASE_URL}/tasks`);
   return res.data;
