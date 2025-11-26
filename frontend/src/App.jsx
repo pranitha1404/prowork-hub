@@ -12,18 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Tasks from "./pages/Tasks";
 import TaskBoard from "./pages/TaskBoard";
+import CalendarPage from "./pages/Calendar"; // ✅ new calendar
 
-// simple placeholder Calendar component
-function Calendar() {
-  return (
-    <div style={{ padding: "30px" }}>
-      <h1>Calendar</h1>
-      <p>Calendar view coming soon.</p>
-    </div>
-  );
-}
-
-// top navbar shown only AFTER login
 function Navbar({ onLogout }) {
   return (
     <nav style={nav}>
@@ -76,16 +66,10 @@ const logoutBtn = {
 };
 
 function App() {
-  // simple in-memory auth flag
   const [isAuthed, setIsAuthed] = useState(false);
 
-  const handleLoginSuccess = () => {
-    setIsAuthed(true);
-  };
-
-  const handleLogout = () => {
-    setIsAuthed(false);
-  };
+  const handleLoginSuccess = () => setIsAuthed(true);
+  const handleLogout = () => setIsAuthed(false);
 
   return (
     <Router>
@@ -97,8 +81,7 @@ function App() {
             <Route path="/employees" element={<Employees />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task-board" element={<TaskBoard />} />
-            <Route path="/calendar" element={<Calendar />} />
-            {/* default once logged in */}
+            <Route path="/calendar" element={<CalendarPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </>
@@ -108,7 +91,6 @@ function App() {
             path="/login"
             element={<Login onSuccess={handleLoginSuccess} />}
           />
-          {/* any other URL redirects to login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       )}
