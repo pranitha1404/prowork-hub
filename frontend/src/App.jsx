@@ -12,7 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import Tasks from "./pages/Tasks";
 import TaskBoard from "./pages/TaskBoard";
-import CalendarPage from "./pages/Calendar"; // ✅ new calendar
+import CalendarPage from "./pages/Calendar";
+import Performance from "./pages/Performance"; // ⭐ new page
 
 function Navbar({ onLogout }) {
   return (
@@ -33,6 +34,9 @@ function Navbar({ onLogout }) {
         </Link>
         <Link style={link} to="/calendar">
           Calendar
+        </Link>
+        <Link style={link} to="/performance">
+          Performance
         </Link>
         <button onClick={onLogout} style={logoutBtn}>
           Logout
@@ -58,7 +62,7 @@ const link = {
 const logoutBtn = {
   marginLeft: "10px",
   padding: "6px 10px",
-  borderRadius: "5px",
+  borderRadius: "4px",
   border: "none",
   background: "#ff4d4d",
   color: "#fff",
@@ -82,6 +86,7 @@ function App() {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task-board" element={<TaskBoard />} />
             <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/performance" element={<Performance />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </>
